@@ -31,7 +31,9 @@ public class YandexMapController:
 
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
     self.pluginRegistrar = registrar
-    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: YandexMapController.isM1Simulator())
+    // Disable Vulkan to prevent crashes on iOS simulators and devices
+    // Vulkan initialization can fail with VM allocation errors on certain iOS versions
+    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: false)
     self.methodChannel = FlutterMethodChannel(
       name: "yandex_mapkit/yandex_map_\(id)",
       binaryMessenger: registrar.messenger()
