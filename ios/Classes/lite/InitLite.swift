@@ -16,9 +16,12 @@ public class InitLite: Init {
     // YMKMapKit.setLocale("ru_RU")
     // GeneratedPluginRegistrant.register(with: self)
     //
-    // DO NOT call ensureMapKitStarted() here - it will crash if API key isn't set.
-    // MapKit initialization is deferred until the first map view is created.
+    // The crash happens because MapKit classes are loaded during registration.
+    // We must ensure API key is set, but we CANNOT call sharedInstance() here.
+    // MapKit will be initialized when the first map view is created.
     
+    // Register factory - this should be safe if API key is set
+    // The factory itself doesn't access MapKit, only the controller does
     registrar.register(
       YandexMapFactory(registrar: registrar),
       withId: "yandex_mapkit/yandex_map"
