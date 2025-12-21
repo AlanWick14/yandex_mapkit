@@ -6,7 +6,11 @@ import YandexMapsMobile
 public class YandexSuggest: NSObject, FlutterPlugin {
   private let pluginRegistrar: FlutterPluginRegistrar!
   private let methodChannel: FlutterMethodChannel!
-  private let searchManager: YMKSearchManager!
+  // Lazy initialization to prevent crash during plugin registration
+  private lazy var searchManager: YMKSearchManager = {
+    InitLite.ensureMapKitStarted()
+    return YMKSearchFactory.instance().createSearchManager(with: .combined)
+  }()
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
@@ -22,7 +26,7 @@ public class YandexSuggest: NSObject, FlutterPlugin {
   public required init(channel: FlutterMethodChannel, registrar: FlutterPluginRegistrar) {
     self.pluginRegistrar = registrar
     self.methodChannel = channel
-    self.searchManager = YMKSearchFactory.instance().createSearchManager(with: .combined)
+    // Don't initialize searchManager here - it's lazy now
 
     super.init()
 

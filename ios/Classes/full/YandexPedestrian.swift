@@ -5,7 +5,11 @@ import YandexMapsMobile
 public class YandexPedestrian: NSObject, FlutterPlugin {
   private let methodChannel: FlutterMethodChannel!
   private let pluginRegistrar: FlutterPluginRegistrar!
-  private let pedestrianRouter: YMKPedestrianRouter!
+  // Lazy initialization to prevent crash during plugin registration
+  private lazy var pedestrianRouter: YMKPedestrianRouter = {
+    InitLite.ensureMapKitStarted()
+    return YMKTransportFactory.instance().createPedestrianRouter()
+  }()
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
@@ -21,7 +25,7 @@ public class YandexPedestrian: NSObject, FlutterPlugin {
   public required init(channel: FlutterMethodChannel, registrar: FlutterPluginRegistrar) {
     self.pluginRegistrar = registrar
     self.methodChannel = channel
-    self.pedestrianRouter = YMKTransportFactory.instance().createPedestrianRouter()
+    // Don't initialize pedestrianRouter here - it's lazy now
 
     super.init()
 

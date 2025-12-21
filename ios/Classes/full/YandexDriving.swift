@@ -5,7 +5,11 @@ import YandexMapsMobile
 public class YandexDriving: NSObject, FlutterPlugin {
   private let methodChannel: FlutterMethodChannel!
   private let pluginRegistrar: FlutterPluginRegistrar!
-  private let drivingRouter: YMKDrivingRouter!
+  // Lazy initialization to prevent crash during plugin registration
+  private lazy var drivingRouter: YMKDrivingRouter = {
+    InitLite.ensureMapKitStarted()
+    return YMKDirectionsFactory.instance().createDrivingRouter(withType: YMKDrivingRouterType.combined)
+  }()
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
@@ -21,7 +25,7 @@ public class YandexDriving: NSObject, FlutterPlugin {
   public required init(channel: FlutterMethodChannel, registrar: FlutterPluginRegistrar) {
     self.pluginRegistrar = registrar
     self.methodChannel = channel
-    self.drivingRouter = YMKDirectionsFactory.instance().createDrivingRouter(withType: YMKDrivingRouterType.combined)
+    // Don't initialize drivingRouter here - it's lazy now
 
     super.init()
 
