@@ -8,14 +8,22 @@ public class InitLite: Init {
   private static let startLock = NSLock()
   
   public class func register(with registrar: FlutterPluginRegistrar) {
+    // IMPORTANT: YMKMapKit.setApiKey() MUST be called in AppDelegate
+    // BEFORE GeneratedPluginRegistrant.register() is called.
+    // 
+    // Example AppDelegate code:
+    // YMKMapKit.setApiKey("YOUR_API_KEY")
+    // YMKMapKit.setLocale("ru_RU")
+    // GeneratedPluginRegistrant.register(with: self)
+    
+    // Try to initialize MapKit early to prevent crashes during class loading
+    // This is safe if API key was set in AppDelegate
+    ensureMapKitStarted()
+    
     registrar.register(
       YandexMapFactory(registrar: registrar),
       withId: "yandex_mapkit/yandex_map"
     )
-    
-    // Delay onStart() to ensure MapKit is fully initialized with API key
-    // This will be called when the first map view is created to prevent
-    // crashes in getPlatformInstance during plugin registration
   }
   
   public class func ensureMapKitStarted() {
@@ -23,8 +31,10 @@ public class InitLite: Init {
     defer { startLock.unlock() }
     
     if !hasStarted {
-      // Call onStart() on main thread to ensure MapKit is ready
-      // This is called when the first map view is created, after API key is set
+      // IMPORTANT: This assumes YMKMapKit.setApiKey() was called in AppDelegate
+      // before GeneratedPluginRegistrant.register() is called.
+      // Call onStart() on main thread to ensure MapKit is ready.
+      // This is called when the first map view is created, after API key is set.
       if Thread.isMainThread {
         YMKMapKit.sharedInstance().onStart()
         hasStarted = true

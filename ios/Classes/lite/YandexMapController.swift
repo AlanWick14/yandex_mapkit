@@ -31,13 +31,15 @@ public class YandexMapController:
 
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
     self.pluginRegistrar = registrar
+    
+    // Ensure MapKit is started BEFORE creating map view
+    // YMKMapView initialization may access YMKMapKit.sharedInstance()
+    // This prevents crashes in getPlatformInstance
+    InitLite.ensureMapKitStarted()
+    
     // Disable Vulkan to prevent crashes on iOS simulators and devices
     // Vulkan initialization can fail with VM allocation errors on certain iOS versions
     self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: false)
-    
-    // Ensure MapKit is started before accessing sharedInstance()
-    // This prevents crashes in getPlatformInstance
-    InitLite.ensureMapKitStarted()
     
     self.methodChannel = FlutterMethodChannel(
       name: "yandex_mapkit/yandex_map_\(id)",

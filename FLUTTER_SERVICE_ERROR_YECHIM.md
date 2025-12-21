@@ -39,10 +39,10 @@ import YandexMapsMobile
     // 1. AVVAL API kalit va locale o'rnatish (MUHIM!)
     YMKMapKit.setApiKey("HAQIQIY_API_KALIT_BU_YERGA") // YOUR_API_KEY emas!
     YMKMapKit.setLocale("ru_RU") // yoki "en_US", "uz_UZ"
-    
+
     // 2. Keyin Flutter plugin'larni register qilish
     GeneratedPluginRegistrant.register(with: self)
-    
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
@@ -98,11 +98,13 @@ flutter run
 ### 3. Initialization Tartibi
 
 **TO'G'RI TARTIB:**
+
 1. `YMKMapKit.setApiKey()` - birinchi
 2. `YMKMapKit.setLocale()` - ikkinchi
 3. `GeneratedPluginRegistrant.register()` - uchinchi
 
 **NOTO'G'RI TARTIB:**
+
 - Plugin'larni avval register qilish
 - API kalitni keyin o'rnatish
 
@@ -125,6 +127,7 @@ flutter run --verbose
 ### 3. Crash Log'ni Tahlil Qilish
 
 Crash log'da quyidagilarni qidiring:
+
 - `YMKMapKit` bilan bog'liq xatoliklar
 - `getPlatformInstance` xatoliklari
 - API kalit bilan bog'liq xatoliklar
@@ -143,9 +146,8 @@ Crash log'da quyidagilarni qidiring:
 ## 📞 Yordam
 
 Agar muammo davom etsa:
+
 1. Xcode console'da to'liq xatolikni ko'ring
 2. Crash log'ni to'liq ko'rib chiqing
 3. API kalit to'g'riligini tekshiring
 4. Yandex Developer Portal'da API kalit holatini tekshiring
-
-

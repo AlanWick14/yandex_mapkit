@@ -5,6 +5,7 @@
 ### 1. ✅ BEPUL QISMLAR (100% Bepul)
 
 **SDK va Asosiy Funksiyalar:**
+
 - ✅ SDK yuklab olish va o'rnatish - **BEPUL**
 - ✅ API kalit olish - **BEPUL**
 - ✅ Interaktiv xaritalar ko'rsatish - **BEPUL**
@@ -15,6 +16,7 @@
 - ✅ Address suggestions - **BEPUL**
 
 **Foydalanuvchi Limiti:**
+
 - ✅ **Oyiga 25,000 MAU gacha** - **TO'LIQ BEPUL**
 
 ---
@@ -24,14 +26,17 @@
 ### 1. Foydalanuvchi Limiti Oshganda
 
 **Bepul Limit:**
+
 - ✅ Oyiga 25,000 noyob foydalanuvchi (MAU) gacha - **BEPUL**
 
 **Pullik Limit:**
+
 - 💰 **25,000+ MAU** - Pullik tarif kerak
 - 💰 Masalan: 125,000 MAU uchun ~**$4,800/yil**
 - 💰 1,000,000+ MAU uchun - Individual narx
 
 **Qachon Pullik:**
+
 - Agar ilovangizda oyiga 25,000 dan ortiq noyob foydalanuvchi bo'lsa
 - Yandex avtomatik ravishda pullik tarifga o'tkazadi
 
@@ -42,20 +47,24 @@
 **Quyidagi funksiyalar pullik litsenziya talab qiladi:**
 
 #### a) Oflayn Xaritalar (Offline Maps)
+
 - 💰 **Oflayn xaritalarni yuklab olish** - Pullik
 - 💰 **Oflayn navigatsiya** - Pullik
 - ✅ Onlayn xaritalar - Bepul (25,000 MAU gacha)
 
 #### b) Transport Monitoringi
+
 - 💰 **Transport monitoringi** - Pullik
 - 💰 **Real-time transport kuzatuv** - Pullik
 - ✅ Oddiy xarita ko'rsatish - Bepul
 
 #### c) Navikit Variant
+
 - 💰 **Navikit variant** - Pullik (Yandex Navigator integratsiyasi)
 - ✅ Lite va Full variantlar - Bepul (25,000 MAU gacha)
 
 #### d) Enterprise Funksiyalar
+
 - 💰 **3D modellar** - Ba'zi holatlarda pullik
 - 💰 **Bino ichidagi navigatsiya** - Pullik
 - 💰 **Qo'shimcha API limitlar** - Pullik
@@ -106,6 +115,7 @@
 ### 1. API Kalit Olishda
 
 https://developer.tech.yandex.ru/services/ ga kirib:
+
 - "MapKit Mobile SDK" kalit yaratish
 - **Bepul kalit** - 25,000 MAU gacha
 - **Pullik kalit** - 25,000+ MAU uchun
@@ -145,9 +155,7 @@ https://developer.tech.yandex.ru/services/ ga kirib:
 ## 📞 YORDAM
 
 Agar pullik tarif haqida savol bo'lsa:
+
 - **Yandex Support:** https://yandex.com/support/maps-api/
 - **Commercial License:** https://yandex.com/dev/commercial/
 - **Email:** Yandex bilan bog'lanish
-
-
-
