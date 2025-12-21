@@ -149,3 +149,5 @@ Agar pullik tarif haqida savol bo'lsa:
 - **Commercial License:** https://yandex.com/dev/commercial/
 - **Email:** Yandex bilan bog'lanish
 
+
+
