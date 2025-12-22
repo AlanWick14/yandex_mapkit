@@ -49,10 +49,13 @@ public class YandexPedestrianSession: NSObject {
       (pointParams) -> YMKRequestPoint in UtilsFull.requestPointFromJson(pointParams)
     }
 
+    let routeOptions = YMKMasstransitRouteOptions()
+    routeOptions.avoidSteep = (params["avoidSteep"] as! NSNumber).boolValue
+
     session = pedestrianRouter.requestRoutes(
       with: requestPoints,
       timeOptions: UtilsFull.timeOptionsFromJson(params["timeOptions"] as! [String: Any]),
-      avoidSteep: (params["avoidSteep"] as! NSNumber).boolValue,
+      routeOptions: routeOptions,
       routeHandler: {(pedestrianResponse: [YMKMasstransitRoute]?, error: Error?) -> Void in
         self.handleResponse(pedestrianResponse: pedestrianResponse, error: error, result: result)
       }

@@ -132,7 +132,7 @@ public class YandexMapController:
 
     let params = call.arguments as! [String: Any]
     userLocationLayer.setVisibleWithOn(params["visible"] as! Bool)
-    userLocationLayer.isHeadingEnabled = params["headingEnabled"] as! Bool
+    userLocationLayer.setHeadingEnabledWithOn(params["headingEnabled"] as! Bool)
     userLocationLayer.isAutoZoomEnabled = params["autoZoomEnabled"] as! Bool
     userLocationLayer.resetAnchor()
 
