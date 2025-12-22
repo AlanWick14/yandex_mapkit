@@ -132,7 +132,20 @@ public class YandexMapController:
 
     let params = call.arguments as! [String: Any]
     userLocationLayer.setVisibleWithOn(params["visible"] as! Bool)
-    userLocationLayer.setHeadingEnabledWithOn(params["headingEnabled"] as! Bool)
+    // Note: Heading enabled setting - API may vary by SDK version
+    // Using runtime method resolution to handle API differences
+    if let headingEnabled = params["headingEnabled"] as? Bool {
+      // Try setHeadingEnabledWithOn: (older API style)
+      let selector1 = NSSelectorFromString("setHeadingEnabledWithOn:")
+      // Try setHeadingEnabled: (alternative API style)  
+      let selector2 = NSSelectorFromString("setHeadingEnabled:")
+      if userLocationLayer.responds(to: selector1) {
+        (userLocationLayer as AnyObject).perform(selector1, with: NSNumber(value: headingEnabled))
+      } else if userLocationLayer.responds(to: selector2) {
+        (userLocationLayer as AnyObject).perform(selector2, with: NSNumber(value: headingEnabled))
+      }
+      // If neither method exists, heading will use SDK default behavior
+    }
     userLocationLayer.isAutoZoomEnabled = params["autoZoomEnabled"] as! Bool
     userLocationLayer.resetAnchor()
 
