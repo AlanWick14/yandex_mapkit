@@ -28,19 +28,9 @@ public class YandexMapController:
     )
   }()
   private let mapView: FLYMKMapView
-
-  public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
+   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
     self.pluginRegistrar = registrar
-    
-    // Ensure MapKit is started BEFORE creating map view
-    // YMKMapView initialization may access YMKMapKit.sharedInstance()
-    // This prevents crashes in getPlatformInstance
-    InitLite.ensureMapKitStarted()
-    
-    // Disable Vulkan to prevent crashes on iOS simulators and devices
-    // Vulkan initialization can fail with VM allocation errors on certain iOS versions
-    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: false)
-    
+    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: YandexMapController.isSimulator())
     self.methodChannel = FlutterMethodChannel(
       name: "yandex_mapkit/yandex_map_\(id)",
       binaryMessenger: registrar.messenger()
@@ -63,6 +53,41 @@ public class YandexMapController:
     applyMapOptions(params["mapOptions"] as! [String: Any])
     applyMapObjects(params["mapObjects"] as! [String: Any])
   }
+
+  // public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
+  //   self.pluginRegistrar = registrar
+    
+  //   // Ensure MapKit is started BEFORE creating map view
+  //   // YMKMapView initialization may access YMKMapKit.sharedInstance()
+  //   // This prevents crashes in getPlatformInstance
+  //   InitLite.ensureMapKitStarted()
+    
+  //   // Disable Vulkan to prevent crashes on iOS simulators and devices
+  //   // Vulkan initialization can fail with VM allocation errors on certain iOS versions
+  //   self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: false)
+    
+  //   self.methodChannel = FlutterMethodChannel(
+  //     name: "yandex_mapkit/yandex_map_\(id)",
+  //     binaryMessenger: registrar.messenger()
+  //   )
+  //   self.userLocationLayer = YMKMapKit.sharedInstance().createUserLocationLayer(with: mapView.mapWindow)
+  //   self.trafficLayer = YMKMapKit.sharedInstance().createTrafficLayer(with: mapView.mapWindow)
+
+  //   super.init()
+
+  //   weak var weakSelf = self
+  //   self.methodChannel.setMethodCallHandler({ weakSelf?.handle($0, result: $1) })
+
+  //   mapView.mapWindow.map.addTapListener(with: self)
+  //   mapView.mapWindow.map.addInputListener(with: self)
+  //   mapView.mapWindow.map.addCameraListener(with: self)
+
+  //   userLocationLayer.setObjectListenerWith(self)
+  //   trafficLayer.addTrafficListener(withTrafficListener: self)
+
+  //   applyMapOptions(params["mapOptions"] as! [String: Any])
+  //   applyMapObjects(params["mapObjects"] as! [String: Any])
+  // }
 
   public func view() -> UIView {
     return self.mapView
