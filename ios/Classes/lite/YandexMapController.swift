@@ -32,7 +32,7 @@ public class YandexMapController:
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
    self.pluginRegistrar = registrar
    // ✅ Initialize MapKit here (lazy initialization)
-   YandexMapKitInitializer.initialize()
+  //  YandexMapKitInitializer.initialize()
   // ✅ Add try-catch for map view creation
    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
   
@@ -42,7 +42,7 @@ public class YandexMapController:
    )
   
   // ✅ Ensure MapKit is initialized before creating layers
-   let mapKit = YMKMapKit.sharedInstance()
+  //  let mapKit = YMKMapKit.sharedInstance()
   
    self.userLocationLayer = mapKit.createUserLocationLayer(with: mapView.mapWindow)
    self.trafficLayer = mapKit.createTrafficLayer(with: mapView.mapWindow)
