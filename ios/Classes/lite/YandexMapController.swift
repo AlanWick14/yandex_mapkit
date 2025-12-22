@@ -31,7 +31,7 @@ public class YandexMapController:
 
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
     self.pluginRegistrar = registrar
-    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: YandexMapController.isSimulator())
+    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
     self.methodChannel = FlutterMethodChannel(
       name: "yandex_mapkit/yandex_map_\(id)",
       binaryMessenger: registrar.messenger()
