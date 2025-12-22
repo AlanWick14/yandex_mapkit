@@ -30,29 +30,36 @@ public class YandexMapController:
   private let mapView: FLYMKMapView
 
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
-    self.pluginRegistrar = registrar
-    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
-    self.methodChannel = FlutterMethodChannel(
-      name: "yandex_mapkit/yandex_map_\(id)",
-      binaryMessenger: registrar.messenger()
-    )
-    self.userLocationLayer = YMKMapKit.sharedInstance().createUserLocationLayer(with: mapView.mapWindow)
-    self.trafficLayer = YMKMapKit.sharedInstance().createTrafficLayer(with: mapView.mapWindow)
+   self.pluginRegistrar = registrar
+  
+  // ✅ Add try-catch for map view creation
+   self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
+  
+   self.methodChannel = FlutterMethodChannel(
+     name: "yandex_mapkit/yandex_map_\(id)",
+     binaryMessenger: registrar.messenger()
+   )
+  
+  // ✅ Ensure MapKit is initialized before creating layers
+   let mapKit = YMKMapKit.sharedInstance()
+  
+   self.userLocationLayer = mapKit.createUserLocationLayer(with: mapView.mapWindow)
+   self.trafficLayer = mapKit.createTrafficLayer(with: mapView.mapWindow)
 
-    super.init()
+   super.init()
 
-    weak var weakSelf = self
-    self.methodChannel.setMethodCallHandler({ weakSelf?.handle($0, result: $1) })
+   weak var weakSelf = self
+   self.methodChannel.setMethodCallHandler({ weakSelf?.handle($0, result: $1) })
 
-    mapView.mapWindow.map.addTapListener(with: self)
-    mapView.mapWindow.map.addInputListener(with: self)
-    mapView.mapWindow.map.addCameraListener(with: self)
+   mapView.mapWindow.map.addTapListener(with: self)
+   mapView.mapWindow.map.addInputListener(with: self)
+   mapView.mapWindow.map.addCameraListener(with: self)
 
-    userLocationLayer.setObjectListenerWith(self)
-    trafficLayer.addTrafficListener(withTrafficListener: self)
+   userLocationLayer.setObjectListenerWith(self)
+   trafficLayer.addTrafficListener(withTrafficListener: self)
 
-    applyMapOptions(params["mapOptions"] as! [String: Any])
-    applyMapObjects(params["mapObjects"] as! [String: Any])
+   applyMapOptions(params["mapOptions"] as! [String: Any])
+   applyMapObjects(params["mapObjects"] as! [String: Any])
   }
 
   public func view() -> UIView {
