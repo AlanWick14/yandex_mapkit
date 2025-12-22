@@ -32,11 +32,16 @@ class UtilsFull: UtilsLite {
       avoidanceFlags.insert(.poorConditions)
     }
     
-    return YMKDrivingOptions(
-      initialAzimuth: json["initialAzimuth"] as? NSNumber,
-      routesCount: json["routesCount"] as? NSNumber,
-      avoidanceFlags: avoidanceFlags
-    )
+    let options = YMKDrivingOptions()
+    if let initialAzimuth = json["initialAzimuth"] as? NSNumber {
+      options.initialAzimuth = initialAzimuth.floatValue
+    }
+    if let routesCount = json["routesCount"] as? NSNumber {
+      options.routesCount = routesCount.uintValue
+    }
+    options.avoidanceFlags = avoidanceFlags
+    
+    return options
   }
 
   static func searchOptionsFromJson(_ json: [String: Any]) -> YMKSearchOptions {
