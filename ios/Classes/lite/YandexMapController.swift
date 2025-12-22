@@ -42,7 +42,7 @@ public class YandexMapController:
    )
   
   // ✅ Ensure MapKit is initialized before creating layers
-  //  let mapKit = YMKMapKit.sharedInstance()
+   let mapKit = YMKMapKit.sharedInstance()
   
    self.userLocationLayer = mapKit.createUserLocationLayer(with: mapView.mapWindow)
    self.trafficLayer = mapKit.createTrafficLayer(with: mapView.mapWindow)
