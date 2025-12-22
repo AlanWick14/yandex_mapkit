@@ -3,17 +3,28 @@ import Flutter
 import UIKit
 import YandexMapsMobile
 
-
 public class InitLite: Init {
   public class func register(with registrar: FlutterPluginRegistrar) {
     registrar.register(
       YandexMapFactory(registrar: registrar),
       withId: "yandex_mapkit/yandex_map"
     )
-
-    YMKMapKit.sharedInstance().onStart()
+    // ❌ DO NOT call MapKit here:
+    // YMKMapKit.sharedInstance().onStart()
+    // ❌ DO NOT call YMKMapKit.mapKit()
+    // ❌ DO NOT call setLocale here
   }
 }
+// public class InitLite: Init {
+//   public class func register(with registrar: FlutterPluginRegistrar) {
+//     registrar.register(
+//       YandexMapFactory(registrar: registrar),
+//       withId: "yandex_mapkit/yandex_map"
+//     )
+
+//     YMKMapKit.sharedInstance().onStart()
+//   }
+// }
 
 // public class InitLite: Init {
 //   private static var hasStarted = false
