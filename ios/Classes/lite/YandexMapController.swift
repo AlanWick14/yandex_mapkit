@@ -28,7 +28,8 @@ public class YandexMapController:
     )
   }()
   private let mapView: FLYMKMapView
-   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
+
+  public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
     self.pluginRegistrar = registrar
     self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: YandexMapController.isSimulator())
     self.methodChannel = FlutterMethodChannel(
@@ -53,41 +54,6 @@ public class YandexMapController:
     applyMapOptions(params["mapOptions"] as! [String: Any])
     applyMapObjects(params["mapObjects"] as! [String: Any])
   }
-
-  // public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
-  //   self.pluginRegistrar = registrar
-    
-  //   // Ensure MapKit is started BEFORE creating map view
-  //   // YMKMapView initialization may access YMKMapKit.sharedInstance()
-  //   // This prevents crashes in getPlatformInstance
-  //   InitLite.ensureMapKitStarted()
-    
-  //   // Disable Vulkan to prevent crashes on iOS simulators and devices
-  //   // Vulkan initialization can fail with VM allocation errors on certain iOS versions
-  //   self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: false)
-    
-  //   self.methodChannel = FlutterMethodChannel(
-  //     name: "yandex_mapkit/yandex_map_\(id)",
-  //     binaryMessenger: registrar.messenger()
-  //   )
-  //   self.userLocationLayer = YMKMapKit.sharedInstance().createUserLocationLayer(with: mapView.mapWindow)
-  //   self.trafficLayer = YMKMapKit.sharedInstance().createTrafficLayer(with: mapView.mapWindow)
-
-  //   super.init()
-
-  //   weak var weakSelf = self
-  //   self.methodChannel.setMethodCallHandler({ weakSelf?.handle($0, result: $1) })
-
-  //   mapView.mapWindow.map.addTapListener(with: self)
-  //   mapView.mapWindow.map.addInputListener(with: self)
-  //   mapView.mapWindow.map.addCameraListener(with: self)
-
-  //   userLocationLayer.setObjectListenerWith(self)
-  //   trafficLayer.addTrafficListener(withTrafficListener: self)
-
-  //   applyMapOptions(params["mapOptions"] as! [String: Any])
-  //   applyMapObjects(params["mapObjects"] as! [String: Any])
-  // }
 
   public func view() -> UIView {
     return self.mapView
@@ -168,37 +134,6 @@ public class YandexMapController:
       )
     }
   }
-
-
-  // public func toggleUserLayer(_ call: FlutterMethodCall) {
-  //   if (!hasLocationPermission()) { return }
-
-  //   let params = call.arguments as! [String: Any]
-  //   userLocationLayer.setVisibleWithOn(params["visible"] as! Bool)
-  //   // Note: Heading enabled setting - API may vary by SDK version
-  //   // Using runtime method resolution to handle API differences
-  //   if let headingEnabled = params["headingEnabled"] as? Bool {
-  //     // Try setHeadingEnabledWithOn: (older API style)
-  //     let selector1 = NSSelectorFromString("setHeadingEnabledWithOn:")
-  //     // Try setHeadingEnabled: (alternative API style)  
-  //     let selector2 = NSSelectorFromString("setHeadingEnabled:")
-  //     if userLocationLayer.responds(to: selector1) {
-  //       (userLocationLayer as AnyObject).perform(selector1, with: NSNumber(value: headingEnabled))
-  //     } else if userLocationLayer.responds(to: selector2) {
-  //       (userLocationLayer as AnyObject).perform(selector2, with: NSNumber(value: headingEnabled))
-  //     }
-  //     // If neither method exists, heading will use SDK default behavior
-  //   }
-  //   userLocationLayer.isAutoZoomEnabled = params["autoZoomEnabled"] as! Bool
-  //   userLocationLayer.resetAnchor()
-
-  //   if let anchor = params["anchor"] as? [String: Any] {
-  //     userLocationLayer.setAnchorWithAnchorNormal(
-  //       UtilsLite.rectPointFromJson(anchor["normal"] as! [String: NSNumber]),
-  //       anchorCourse: UtilsLite.rectPointFromJson(anchor["course"] as! [String: NSNumber])
-  //     )
-  //   }
-  // }
 
   public func toggleTrafficLayer(_ call: FlutterMethodCall) {
     let params = call.arguments as! [String: Any]
@@ -297,12 +232,12 @@ public class YandexMapController:
     return arguments
   }
 
-  private static func isM1Simulator() -> Bool {
-   #if arch(arm64) && os(iOS) && targetEnvironment(simulator)
-           return true
-           #else
-           return false
-           #endif
+  private static func isSimulator() -> Bool {
+#if targetEnvironment(simulator)
+    return true
+#else
+    return false
+#endif
   }
 
   private func hasLocationPermission() -> Bool {
