@@ -31,7 +31,8 @@ public class YandexMapController:
 
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
    self.pluginRegistrar = registrar
-  
+   // ✅ Initialize MapKit here (lazy initialization)
+   YandexMapKitInitializer.initialize()
   // ✅ Add try-catch for map view creation
    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
   
