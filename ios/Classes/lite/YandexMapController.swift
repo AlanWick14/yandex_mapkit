@@ -34,6 +34,16 @@ public class YandexMapController:
    // ✅ Initialize MapKit here (lazy initialization)
   //  YandexMapKitInitializer.initialize()
   // ✅ Add try-catch for map view creation
+  // ✅ Debug bundle info before map creation
+    print("🔍 Creating map view...")
+    print("📦 Bundle ID: \(Bundle.main.bundleIdentifier ?? "nil")")
+    print("📱 App Name: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleName") ?? "nil")")
+    print("📱 Display Name: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") ?? "nil")")
+    print("🌍 Locale: \(Locale.current.identifier)")
+    print("📏 Frame: \(frame)")
+    print("🔍 Is Simulator: \(YandexMapController.isSimulator())")
+
+    
    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
   
    self.methodChannel = FlutterMethodChannel(
