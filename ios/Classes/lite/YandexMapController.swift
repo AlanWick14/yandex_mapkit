@@ -43,7 +43,14 @@ public class YandexMapController:
     print("📏 Frame: \(frame)")
     print("🔍 Is Simulator: \(YandexMapController.isSimulator())")
 
-    
+    var initialFrame = frame
+    if frame.isEmpty || frame.width == 0 || frame.height == 0 {
+    // Use a temporary 1x1 frame - it will be resized when the actual frame is set
+    initialFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
+    print("⚠️ Initial frame is empty, using temporary 1x1 frame")
+    }
+  
+  print("🔍 Creating map view with frame: \(initialFrame)")
    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
   
    self.methodChannel = FlutterMethodChannel(
