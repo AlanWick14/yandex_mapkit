@@ -30,55 +30,52 @@ public class YandexMapController:
   private let mapView: FLYMKMapView
 
   public required init(id: Int64, frame: CGRect, registrar: FlutterPluginRegistrar, params: [String: Any]) {
-   self.pluginRegistrar = registrar
-   // ✅ Initialize MapKit here (lazy initialization)
-  //  YandexMapKitInitializer.initialize()
-  // ✅ Add try-catch for map view creation
-  // ✅ Debug bundle info before map creation
+    self.pluginRegistrar = registrar
+
     print("🔍 Creating map view...")
-    print("📦 Bundle ID: \(Bundle.main.bundleIdentifier ?? "nil")")
-    print("📱 App Name: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleName") ?? "nil")")
-    print("📱 Display Name: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") ?? "nil")")
-    print("🌍 Locale: \(Locale.current.identifier)")
-    print("📏 Frame: \(frame)")
-    print("🔍 Is Simulator: \(YandexMapController.isSimulator())")
+    print("📏 Original Frame: \(frame)")
 
+  // ✅ Ensure minimum frame size
     let minSize: CGFloat = 1.0
-   var safeFrame = frame
-   if frame.width < minSize || frame.height < minSize {
-     safeFrame = CGRect(x: frame.origin.x, y: frame.origin.y, 
-                       width: max(frame.width, minSize), 
-                       height: max(frame.height, minSize))
-    print("⚠️ Adjusted frame from \(frame) to \(safeFrame)")
-  }
+    let safeFrame = CGRect(
+      x: frame.origin.x, 
+      y: frame.origin.y, 
+      width: max(frame.width, minSize), 
+      height: max(frame.height, minSize)
+    )
   
-   self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
+    if frame.width < minSize || frame.height < minSize {
+      print("⚠️ Adjusted frame to \(safeFrame)")
+    }
   
-   self.methodChannel = FlutterMethodChannel(
-     name: "yandex_mapkit/yandex_map_\(id)",
-     binaryMessenger: registrar.messenger()
-   )
+  // ✅ USE safeFrame, not frame
+    self.mapView = FLYMKMapView(frame: safeFrame, vulkanPreferred: !YandexMapController.isSimulator())
   
-  // ✅ Ensure MapKit is initialized before creating layers
-   let mapKit = YMKMapKit.sharedInstance()
+    self.methodChannel = FlutterMethodChannel(
+      name: "yandex_mapkit/yandex_map_\(id)",
+      binaryMessenger: registrar.messenger()
+    )
   
-   self.userLocationLayer = mapKit.createUserLocationLayer(with: mapView.mapWindow)
-   self.trafficLayer = mapKit.createTrafficLayer(with: mapView.mapWindow)
+  // MapKit should already be initialized from AppDelegate
+    let mapKit = YMKMapKit.sharedInstance()
+  
+    self.userLocationLayer = mapKit.createUserLocationLayer(with: mapView.mapWindow)
+    self.trafficLayer = mapKit.createTrafficLayer(with: mapView.mapWindow)
 
-   super.init()
+    super.init()
 
-   weak var weakSelf = self
-   self.methodChannel.setMethodCallHandler({ weakSelf?.handle($0, result: $1) })
+    weak var weakSelf = self
+    self.methodChannel.setMethodCallHandler({ weakSelf?.handle($0, result: $1) })
 
-   mapView.mapWindow.map.addTapListener(with: self)
-   mapView.mapWindow.map.addInputListener(with: self)
-   mapView.mapWindow.map.addCameraListener(with: self)
+    mapView.mapWindow.map.addTapListener(with: self)
+    mapView.mapWindow.map.addInputListener(with: self)
+    mapView.mapWindow.map.addCameraListener(with: self)
 
-   userLocationLayer.setObjectListenerWith(self)
-   trafficLayer.addTrafficListener(withTrafficListener: self)
+    userLocationLayer.setObjectListenerWith(self)
+    trafficLayer.addTrafficListener(withTrafficListener: self)
 
-   applyMapOptions(params["mapOptions"] as! [String: Any])
-   applyMapObjects(params["mapObjects"] as! [String: Any])
+    applyMapOptions(params["mapOptions"] as! [String: Any])
+    applyMapObjects(params["mapObjects"] as! [String: Any])
   }
 
   public func view() -> UIView {
