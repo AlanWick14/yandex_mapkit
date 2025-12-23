@@ -43,12 +43,14 @@ public class YandexMapController:
     print("📏 Frame: \(frame)")
     print("🔍 Is Simulator: \(YandexMapController.isSimulator())")
 
-    var initialFrame = frame
-    if frame.isEmpty || frame.width == 0 || frame.height == 0 {
-    // Use a temporary 1x1 frame - it will be resized when the actual frame is set
-    initialFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
-    print("⚠️ Initial frame is empty, using temporary 1x1 frame")
-    }
+    let minSize: CGFloat = 1.0
+   var safeFrame = frame
+   if frame.width < minSize || frame.height < minSize {
+     safeFrame = CGRect(x: frame.origin.x, y: frame.origin.y, 
+                       width: max(frame.width, minSize), 
+                       height: max(frame.height, minSize))
+    print("⚠️ Adjusted frame from \(frame) to \(safeFrame)")
+  }
   
   print("🔍 Creating map view with frame: \(initialFrame)")
    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
