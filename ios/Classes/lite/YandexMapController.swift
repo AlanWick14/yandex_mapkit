@@ -55,6 +55,14 @@ public class YandexMapController:
       name: "yandex_mapkit/yandex_map_\(id)",
       binaryMessenger: registrar.messenger()
     )
+
+    let b = Bundle.main
+    print("BUNDLE ID:", b.bundleIdentifier as Any)
+    print("VERSION:", b.object(forInfoDictionaryKey: "CFBundleShortVersionString") as Any)
+    print("BUILD:", b.object(forInfoDictionaryKey: "CFBundleVersion") as Any)
+    print("NAME:", b.object(forInfoDictionaryKey: "CFBundleDisplayName") as Any)
+    print("EXE:", b.object(forInfoDictionaryKey: "CFBundleExecutable") as Any)
+
   
   // MapKit should already be initialized from AppDelegate
     let mapKit = YMKMapKit.sharedInstance()
