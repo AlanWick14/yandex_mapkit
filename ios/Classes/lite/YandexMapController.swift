@@ -52,7 +52,6 @@ public class YandexMapController:
     print("⚠️ Adjusted frame from \(frame) to \(safeFrame)")
   }
   
-  print("🔍 Creating map view with frame: \(initialFrame)")
    self.mapView = FLYMKMapView(frame: frame, vulkanPreferred: !YandexMapController.isSimulator())
   
    self.methodChannel = FlutterMethodChannel(
