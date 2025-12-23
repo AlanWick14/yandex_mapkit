@@ -47,6 +47,15 @@ public class YandexMapController:
     if frame.width < minSize || frame.height < minSize {
       print("⚠️ Adjusted frame to \(safeFrame)")
     }
+
+    let b = Bundle.main
+    print("BUNDLE ID:", b.bundleIdentifier as Any)
+    print("VERSION:", b.object(forInfoDictionaryKey: "CFBundleShortVersionString") as Any)
+    print("BUILD:", b.object(forInfoDictionaryKey: "CFBundleVersion") as Any)
+    print("NAME:", b.object(forInfoDictionaryKey: "CFBundleDisplayName") as Any)
+    print("EXE:", b.object(forInfoDictionaryKey: "CFBundleExecutable") as Any)
+
+  
   
   // ✅ USE safeFrame, not frame
     self.mapView = FLYMKMapView(frame: safeFrame, vulkanPreferred: false)
