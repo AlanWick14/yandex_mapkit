@@ -49,7 +49,7 @@ public class YandexMapController:
     }
   
   // ✅ USE safeFrame, not frame
-    self.mapView = FLYMKMapView(frame: safeFrame, vulkanPreferred: !YandexMapController.isSimulator())
+    self.mapView = FLYMKMapView(frame: safeFrame, vulkanPreferred: false)
   
     self.methodChannel = FlutterMethodChannel(
       name: "yandex_mapkit/yandex_map_\(id)",
