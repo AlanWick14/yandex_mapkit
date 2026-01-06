@@ -30,43 +30,41 @@ import java.util.List;
 import java.util.Map;
 
 public class UtilsLite {
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   public static ScreenPoint screenPointFromJson(Map<String, Object> json) {
     return new ScreenPoint(((Double) json.get("x")).floatValue(), ((Double) json.get("y")).floatValue());
   }
 
-  @SuppressWarnings({"ConstantConditions", "unchecked"})
+  @SuppressWarnings({ "ConstantConditions", "unchecked" })
   public static ScreenRect screenRectFromJson(Map<String, Object> json) {
     return new ScreenRect(
-      screenPointFromJson(((Map<String, Object>) json.get("topLeft"))),
-      screenPointFromJson(((Map<String, Object>) json.get("bottomRight")))
-    );
+        screenPointFromJson(((Map<String, Object>) json.get("topLeft"))),
+        screenPointFromJson(((Map<String, Object>) json.get("bottomRight"))));
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   public static PointF rectPointFromJson(Map<String, Double> json) {
     return new PointF(((Double) json.get("dx")).floatValue(), ((Double) json.get("dy")).floatValue());
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static Rect rectFromJson(Map<String, Object> json) {
     return new Rect(
-      rectPointFromJson((Map<String, Double>) json.get("min")),
-      rectPointFromJson((Map<String, Double>) json.get("max"))
-    );
+        rectPointFromJson((Map<String, Double>) json.get("min")),
+        rectPointFromJson((Map<String, Double>) json.get("max")));
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static RequestPoint requestPointFromJson(Map<String, Object> json) {
     return new RequestPoint(
-      pointFromJson((Map<String, Object>) json.get("point")),
-      RequestPointType.values()[(Integer) json.get("requestPointType")],
-      null,
-      null
-    );
+        pointFromJson((Map<String, Object>) json.get("point")),
+        RequestPointType.values()[(Integer) json.get("requestPointType")],
+        null,
+        null,
+        null);
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static Geometry geometryFromJson(Map<String, Object> json) {
     if (json.get("point") != null) {
       return Geometry.fromPoint(pointFromJson((Map<String, Object>) json.get("point")));
@@ -85,68 +83,65 @@ public class UtilsLite {
     }
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static BoundingBox boundingBoxFromJson(Map<String, Object> json) {
     return new BoundingBox(
-      pointFromJson((Map<String, Object>) json.get("southWest")),
-      pointFromJson((Map<String, Object>) json.get("northEast"))
-    );
+        pointFromJson((Map<String, Object>) json.get("southWest")),
+        pointFromJson((Map<String, Object>) json.get("northEast")));
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static Circle circleFromJson(Map<String, Object> json) {
     return new Circle(
-      pointFromJson((Map<String, Object>) json.get("center")),
-      ((Double) json.get("radius")).floatValue()
-    );
+        pointFromJson((Map<String, Object>) json.get("center")),
+        ((Double) json.get("radius")).floatValue());
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static LinearRing linearRingFromJson(Map<String, Object> json) {
     ArrayList<Point> points = new ArrayList<>();
 
-    for (Map<String, Object> pointJson: (List<Map<String, Object>>) json.get("points")) {
+    for (Map<String, Object> pointJson : (List<Map<String, Object>>) json.get("points")) {
       points.add(pointFromJson(pointJson));
     }
 
     return new LinearRing(points);
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static MultiPolygon multiPolygonFromJson(Map<String, Object> json) {
     ArrayList<Polygon> polygons = new ArrayList<>();
 
-    for (Map<String, Object> polygonJson: (List<Map<String, Object>>) json.get("polygons")) {
+    for (Map<String, Object> polygonJson : (List<Map<String, Object>>) json.get("polygons")) {
       polygons.add(polygonFromJson(polygonJson));
     }
 
     return new MultiPolygon(polygons);
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   public static Point pointFromJson(Map<String, Object> json) {
     return new Point(((Double) json.get("latitude")), ((Double) json.get("longitude")));
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static Polygon polygonFromJson(Map<String, Object> json) {
     ArrayList<LinearRing> innerRings = new ArrayList<>();
 
-    for (Map<String, Object> linearRingJson: (List<Map<String, Object>>) json.get("innerRings")) {
+    for (Map<String, Object> linearRingJson : (List<Map<String, Object>>) json.get("innerRings")) {
       innerRings.add(linearRingFromJson(linearRingJson));
     }
 
     return new Polygon(
-      linearRingFromJson((Map<String, Object>) json.get("outerRing")),
-      innerRings
-    );
+        linearRingFromJson((Map<String, Object>) json.get("outerRing")),
+        innerRings);
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public static Polyline polylineFromJson(Map<String, Object> json) {
     ArrayList<Point> points = new ArrayList<>();
 
-    for (Map<String, Object> pointJson: (List<Map<String, Object>>) json.get("points")) {
+    for (Map<String, Object> pointJson : (List<Map<String, Object>>) json.get("points")) {
       points.add(pointFromJson(pointJson));
     }
 
@@ -157,29 +152,23 @@ public class UtilsLite {
     Map<String, Object> geometryMap = new HashMap<>();
 
     geometryMap.put(
-      "boundingBox",
-      geometry.getBoundingBox() == null ? null : boundingBoxToJson(geometry.getBoundingBox())
-    );
+        "boundingBox",
+        geometry.getBoundingBox() == null ? null : boundingBoxToJson(geometry.getBoundingBox()));
     geometryMap.put(
-      "circle",
-      geometry.getCircle() == null ? null : circleToJson(geometry.getCircle())
-    );
+        "circle",
+        geometry.getCircle() == null ? null : circleToJson(geometry.getCircle()));
     geometryMap.put(
-      "multiPolygon",
-      geometry.getMultiPolygon() == null ? null : multiPolygonToJson(geometry.getMultiPolygon())
-    );
+        "multiPolygon",
+        geometry.getMultiPolygon() == null ? null : multiPolygonToJson(geometry.getMultiPolygon()));
     geometryMap.put(
-      "point",
-      geometry.getPoint() == null ? null : pointToJson(geometry.getPoint())
-    );
+        "point",
+        geometry.getPoint() == null ? null : pointToJson(geometry.getPoint()));
     geometryMap.put(
-      "polygon",
-      geometry.getPolygon() == null ? null : polygonToJson(geometry.getPolygon())
-    );
+        "polygon",
+        geometry.getPolygon() == null ? null : polygonToJson(geometry.getPolygon()));
     geometryMap.put(
-      "polyline",
-      geometry.getPolyline() == null ? null : polylineToJson(geometry.getPolyline())
-    );
+        "polyline",
+        geometry.getPolyline() == null ? null : polylineToJson(geometry.getPolyline()));
 
     return geometryMap;
   }
@@ -204,7 +193,7 @@ public class UtilsLite {
     Map<String, Object> linearRingMap = new HashMap<>();
     ArrayList<Map<String, Double>> points = new ArrayList<>();
 
-    for (Point point: linearRing.getPoints()) {
+    for (Point point : linearRing.getPoints()) {
       points.add(pointToJson(point));
     }
 
@@ -217,7 +206,7 @@ public class UtilsLite {
     Map<String, Object> multiPolygonMap = new HashMap<>();
     ArrayList<Map<String, Object>> polygons = new ArrayList<>();
 
-    for (Polygon polygon: multiPolygon.getPolygons()) {
+    for (Polygon polygon : multiPolygon.getPolygons()) {
       polygons.add(polygonToJson(polygon));
     }
 
@@ -238,7 +227,7 @@ public class UtilsLite {
     Map<String, Object> polygonMap = new HashMap<>();
     ArrayList<Map<String, Object>> linearRings = new ArrayList<>();
 
-    for (LinearRing linearRing: polygon.getInnerRings()) {
+    for (LinearRing linearRing : polygon.getInnerRings()) {
       linearRings.add(linearRingToJson(linearRing));
     }
 
@@ -252,7 +241,7 @@ public class UtilsLite {
     Map<String, Object> polylineMap = new HashMap<>();
     ArrayList<Map<String, Double>> points = new ArrayList<>();
 
-    for (Point point: polyline.getPoints()) {
+    for (Point point : polyline.getPoints()) {
       points.add(pointToJson(point));
     }
 
