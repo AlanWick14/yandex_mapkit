@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.yandex.mapkit.transport.TransportFactory;
-import com.yandex.mapkit.transport.bicycle.BicycleRouter;
+import com.yandex.mapkit.transport.masstransit.BicycleRouterV2;
 
 import java.util.Map;
 
@@ -15,16 +15,16 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 public class YandexBicycle implements MethodCallHandler {
-  private final BicycleRouter bicycleRouter;
+  private final BicycleRouterV2 bicycleRouter;
   private final BinaryMessenger binaryMessenger;
 
   public YandexBicycle(Context context, BinaryMessenger messenger) {
-    bicycleRouter = TransportFactory.getInstance().createBicycleRouter();
+    bicycleRouter = TransportFactory.getInstance().createBicycleRouterV2();
     binaryMessenger = messenger;
   }
 
   @Override
-  @SuppressWarnings({"SwitchStatementWithTooFewBranches"})
+  @SuppressWarnings({ "SwitchStatementWithTooFewBranches" })
   public void onMethodCall(MethodCall call, @NonNull Result result) {
     switch (call.method) {
       case "initSession":
@@ -37,7 +37,7 @@ public class YandexBicycle implements MethodCallHandler {
     }
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public void initSession(final MethodCall call) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
     final int id = ((Number) params.get("id")).intValue();

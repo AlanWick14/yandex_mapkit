@@ -1,14 +1,15 @@
 part of '../../../yandex_mapkit.dart';
 
 class BicycleSession {
-  static const String _methodChannelName = 'yandex_mapkit/yandex_bicycle_session_';
+  static const String _methodChannelName =
+      'yandex_mapkit/yandex_bicycle_session_';
   final MethodChannel _methodChannel;
 
   /// Unique session identifier
   final int id;
 
-  BicycleSession._({required this.id}) :
-    _methodChannel = MethodChannel(_methodChannelName + id.toString());
+  BicycleSession._({required this.id})
+    : _methodChannel = MethodChannel(_methodChannelName + id.toString());
 
   /// Retries current session
   Future<void> retry() async {
@@ -27,11 +28,15 @@ class BicycleSession {
 
   Future<BicycleSessionResult> _requestRoutes({
     required List<RequestPoint> points,
-    required BicycleVehicleType bicycleVehicleType
+    required FitnessOptions fitnessOptions,
+    required TimeOptions timeOptions,
   }) async {
     final params = <String, dynamic>{
-      'bicycleVehicleType': bicycleVehicleType.index,
-      'points': points.map((RequestPoint requestPoint) => requestPoint.toJson()).toList(),
+      'timeOptions': timeOptions.toJson(),
+      'fitnessOptions': fitnessOptions.toJson(),
+      'points': points
+          .map((RequestPoint requestPoint) => requestPoint.toJson())
+          .toList(),
     };
     final result = await _methodChannel.invokeMethod('requestRoutes', params);
 
@@ -42,8 +47,8 @@ class BicycleSession {
 /// Result of a request to build routes
 /// If any error has occured then [routes] will be empty, otherwise [error] will be empty
 class BicycleSessionResult {
-  /// Calculated routes
-  final List<BicycleRoute>? routes;
+  /// Calculated routes - now uses MasstransitRoute in SDK 4.22.0
+  final List<PedestrianRoute>? routes;
 
   /// Error message
   final String? error;
@@ -52,8 +57,12 @@ class BicycleSessionResult {
 
   factory BicycleSessionResult._fromJson(Map<dynamic, dynamic> json) {
     return BicycleSessionResult._(
-      json['routes']?.map<BicycleRoute>((dynamic route) => BicycleRoute._fromJson(route)).toList(),
-      json['error']
+      json['routes']
+          ?.map<PedestrianRoute>(
+            (dynamic route) => PedestrianRoute._fromJson(route),
+          )
+          .toList(),
+      json['error'],
     );
   }
 }

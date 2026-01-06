@@ -5,7 +5,13 @@ class UtilsFull: UtilsLite {
     let point = pointFromJson(json["point"] as! [String: NSNumber])
     let pointType = YMKRequestPointType(rawValue: (json["requestPointType"] as! NSNumber).uintValue)!
 
-    return YMKRequestPoint(point: point, type: pointType, pointContext: nil, drivingArrivalPointId: nil, indoorLevelId: nil)
+    return YMKRequestPoint(
+      point: point,
+      type: pointType,
+      pointContext: json["pointContext"] as? String,
+      drivingArrivalPointId: json["drivingArrivalPointId"] as? String,
+      indoorLevelId: json["indoorLevelId"] as? String
+    )
   }
 
   static func timeOptionsFromJson(_ json: [String: Any]) -> YMKTimeOptions {
@@ -19,29 +25,38 @@ class UtilsFull: UtilsLite {
     )
   }
 
+  static func fitnessOptionsFromJson(_ json: [String: Any]) -> YMKFitnessOptions {
+    return YMKFitnessOptions(
+      avoidSteep: (json["avoidSteep"] as! NSNumber).boolValue,
+      avoidStairs: (json["avoidStairs"] as! NSNumber).boolValue
+    )
+  }
+
   static func drivingOptionsFromJson(_ json: [String: Any]) -> YMKDrivingOptions {
-    var avoidanceFlags: YMKDrivingAvoidanceFlags = []
-    
-    if let avoidTolls = json["avoidTolls"] as? NSNumber, avoidTolls.boolValue {
-      avoidanceFlags.insert(.tolls)
-    }
-    if let avoidUnpaved = json["avoidUnpaved"] as? NSNumber, avoidUnpaved.boolValue {
-      avoidanceFlags.insert(.unpaved)
-    }
-    if let avoidPoorConditions = json["avoidPoorConditions"] as? NSNumber, avoidPoorConditions.boolValue {
-      avoidanceFlags.insert(.poorConditions)
-    }
-    
-    let options = YMKDrivingOptions()
-    if let initialAzimuth = json["initialAzimuth"] as? NSNumber {
-      options.initialAzimuth = initialAzimuth.floatValue
-    }
-    if let routesCount = json["routesCount"] as? NSNumber {
-      options.routesCount = routesCount.uintValue
-    }
-    options.avoidanceFlags = avoidanceFlags
-    
-    return options
+    return YMKDrivingOptions(
+      initialAzimuth: json["initialAzimuth"] as? NSNumber,
+      routesCount: json["routesCount"] as? NSNumber,
+      departureTime: json["departureTime"] as? NSNumber == nil ?
+        nil :
+        Date(timeIntervalSince1970: (json["departureTime"] as! NSNumber).doubleValue / 1000.0),
+      annotationLanguage: json["annotationLanguage"] as? NSNumber,
+      avoidanceFlags: json["avoidanceFlags"] as? [String: Any] == nil ?
+        nil :
+        avoidanceFlagsFromJson(json["avoidanceFlags"] as! [String: Any])
+    )
+  }
+
+  static func avoidanceFlagsFromJson(_ json: [String: Any]) -> YMKDrivingAvoidanceFlags {
+    return YMKDrivingAvoidanceFlags(
+      avoidTolls: (json["avoidTolls"] as! NSNumber).boolValue,
+      avoidUnpaved: (json["avoidUnpaved"] as! NSNumber).boolValue,
+      avoidPoorCondition: (json["avoidPoorCondition"] as! NSNumber).boolValue,
+      avoidRailwayCrossing: (json["avoidRailwayCrossing"] as! NSNumber).boolValue,
+      avoidBoatFerry: (json["avoidBoatFerry"] as! NSNumber).boolValue,
+      avoidFordCrossing: (json["avoidFordCrossing"] as! NSNumber).boolValue,
+      avoidTunnel: (json["avoidTunnel"] as! NSNumber).boolValue,
+      avoidHighway: (json["avoidHighway"] as! NSNumber).boolValue
+    )
   }
 
   static func searchOptionsFromJson(_ json: [String: Any]) -> YMKSearchOptions {
@@ -70,7 +85,7 @@ class UtilsFull: UtilsLite {
       suggestTypes: YMKSuggestType.init(rawValue: (json["suggestType"] as! NSNumber).uintValue),
       userPosition: userPosition,
       suggestWords: (json["suggestWords"] as! NSNumber).boolValue,
-      strictBounds: nil
+      strictBounds: (json["strictBounds"] as! NSNumber).boolValue
     )
   }
 }

@@ -10,18 +10,26 @@ class YandexBicycle {
   /// Builds a route.
   static Future<(BicycleSession, Future<BicycleSessionResult>)> requestRoutes({
     required List<RequestPoint> points,
-    required BicycleVehicleType bicycleVehicleType
+    required FitnessOptions fitnessOptions,
+    required TimeOptions timeOptions,
   }) async {
     final session = await _initSession();
 
-    return (session, session._requestRoutes(points: points, bicycleVehicleType: bicycleVehicleType));
+    return (
+      session,
+      session._requestRoutes(
+        points: points,
+        fitnessOptions: fitnessOptions,
+        timeOptions: timeOptions,
+      ),
+    );
   }
 
   /// Initialize session on native side for further use
   static Future<BicycleSession> _initSession() async {
     final id = _nextId++;
 
-    await _channel.invokeMethod('initSession', { 'id': id });
+    await _channel.invokeMethod('initSession', {'id': id});
 
     return BicycleSession._(id: id);
   }

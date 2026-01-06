@@ -8,21 +8,29 @@ class YandexPedestrian {
   static int _nextId = 0;
 
   /// Builds a route.
-  static Future<(PedestrianSession, Future<PedestrianSessionResult>)> requestRoutes({
+  static Future<(PedestrianSession, Future<PedestrianSessionResult>)>
+  requestRoutes({
     required List<RequestPoint> points,
-    required avoidSteep,
-    required TimeOptions timeOptions
+    required FitnessOptions fitnessOptions,
+    required TimeOptions timeOptions,
   }) async {
     final session = await _initSession();
 
-    return (session, session._requestRoutes(points: points, avoidSteep: avoidSteep, timeOptions: timeOptions));
+    return (
+      session,
+      session._requestRoutes(
+        points: points,
+        fitnessOptions: fitnessOptions,
+        timeOptions: timeOptions,
+      ),
+    );
   }
 
   /// Initialize session on native side for further use
   static Future<PedestrianSession> _initSession() async {
     final id = _nextId++;
 
-    await _channel.invokeMethod('initSession', { 'id': id });
+    await _channel.invokeMethod('initSession', {'id': id});
 
     return PedestrianSession._(id: id);
   }

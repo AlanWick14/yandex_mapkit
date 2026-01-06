@@ -57,40 +57,38 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 
 public class YandexMapController implements
-  PlatformView,
-  MethodChannel.MethodCallHandler,
-  DefaultLifecycleObserver,
-  UserLocationObjectListener,
-  TrafficListener,
-  InputListener,
-  CameraListener,
-  GeoObjectTapListener,
-  View.OnLayoutChangeListener
-{
+    PlatformView,
+    MethodChannel.MethodCallHandler,
+    DefaultLifecycleObserver,
+    UserLocationObjectListener,
+    TrafficListener,
+    InputListener,
+    CameraListener,
+    GeoObjectTapListener,
+    View.OnLayoutChangeListener {
   private final MapView mapView;
   public final Context context;
   public final MethodChannel methodChannel;
   private final InitLite.LifecycleProvider lifecycleProvider;
   private final TrafficLayer trafficLayer;
   private final UserLocationLayer userLocationLayer;
-  @SuppressWarnings({"UnusedDeclaration", "FieldCanBeLocal"})
+  @SuppressWarnings({ "UnusedDeclaration", "FieldCanBeLocal" })
   private PlacemarkMapObjectController userPinController;
-  @SuppressWarnings({"UnusedDeclaration", "FieldCanBeLocal"})
+  @SuppressWarnings({ "UnusedDeclaration", "FieldCanBeLocal" })
   private PlacemarkMapObjectController userArrowController;
-  @SuppressWarnings({"UnusedDeclaration", "FieldCanBeLocal"})
+  @SuppressWarnings({ "UnusedDeclaration", "FieldCanBeLocal" })
   private CircleMapObjectController userAccuracyCircleController;
   private final MapObjectCollectionController rootController;
   private boolean disposed = false;
   private MethodChannel.Result initResult;
 
-  @SuppressWarnings({"unchecked", "ConstantConditions", "InflateParams"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions", "InflateParams" })
   public YandexMapController(
-    int id,
-    Context context,
-    BinaryMessenger messenger,
-    Map<String, Object> params,
-    InitLite.LifecycleProvider lifecycleProvider
-  ) {
+      int id,
+      Context context,
+      BinaryMessenger messenger,
+      Map<String, Object> params,
+      InitLite.LifecycleProvider lifecycleProvider) {
     this.lifecycleProvider = lifecycleProvider;
     this.context = context;
 
@@ -111,10 +109,9 @@ public class YandexMapController implements
     methodChannel.setMethodCallHandler(this);
 
     rootController = new MapObjectCollectionController(
-      mapView.getMapWindow().getMap().getMapObjects(),
-      "root_map_object_collection",
-      new WeakReference<>(this)
-    );
+        mapView.getMapWindow().getMap().getMapObjects(),
+        "root_map_object_collection",
+        new WeakReference<>(this));
 
     mapView.getMapWindow().getMap().addInputListener(this);
     mapView.getMapWindow().getMap().addCameraListener(this);
@@ -198,73 +195,71 @@ public class YandexMapController implements
     }
   }
 
-  @SuppressWarnings({"unchecked"})
+  @SuppressWarnings({ "unchecked" })
   public void updateMapObjects(MethodCall call) {
     Map<String, Object> params = (Map<String, Object>) call.arguments;
 
     applyMapObjects(params);
   }
 
-  @SuppressWarnings({"unchecked"})
+  @SuppressWarnings({ "unchecked" })
   public void updateMapOptions(MethodCall call) {
     Map<String, Object> params = (Map<String, Object>) call.arguments;
 
     applyMapOptions(params);
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public void toggleUserLayer(MethodCall call) {
-    if (!hasLocationPermission()) return;
+    if (!hasLocationPermission())
+      return;
 
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
     Map<String, Object> anchor = (Map<String, Object>) params.get("anchor");
 
     userLocationLayer.setVisible((Boolean) params.get("visible"));
-    userLocationLayer.setHeadingEnabled((Boolean) params.get("headingEnabled"));
+    userLocationLayer.setHeadingModeActive((Boolean) params.get("headingEnabled"));
     userLocationLayer.setAutoZoomEnabled((Boolean) params.get("autoZoomEnabled"));
     userLocationLayer.resetAnchor();
 
     if (anchor != null) {
       userLocationLayer.setAnchor(
-        UtilsLite.rectPointFromJson((Map<String, Double>) anchor.get("normal")),
-        UtilsLite.rectPointFromJson((Map<String, Double>) anchor.get("course"))
-      );
+          UtilsLite.rectPointFromJson((Map<String, Double>) anchor.get("normal")),
+          UtilsLite.rectPointFromJson((Map<String, Double>) anchor.get("course")));
     }
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public void toggleTrafficLayer(MethodCall call) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
 
     trafficLayer.setTrafficVisible((Boolean) params.get("visible"));
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public boolean setMapStyle(MethodCall call) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
 
     return mapView.getMapWindow().getMap().setMapStyle((String) params.get("style"));
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public void selectGeoObject(MethodCall call) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
 
     mapView.getMapWindow().getMap().selectGeoObject(
-      new GeoObjectSelectionMetadata(
-        (String) params.get("objectId"),
-        (String) params.get("dataSourceName"),
-        (String) params.get("layerId"),
-        (Long) params.get("groupId")
-      )
-    );
+        new GeoObjectSelectionMetadata(
+            (String) params.get("objectId"),
+            (String) params.get("dataSourceName"),
+            (String) params.get("layerId"),
+            (Long) params.get("groupId")));
   }
 
   public void deselectGeoObject() {
     mapView.getMapWindow().getMap().deselectGeoObject();
   }
 
-  @SuppressWarnings({"unchecked"})
+  @SuppressWarnings({ "unchecked" })
   public Map<String, Float> getScreenPoint(MethodCall call) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
 
@@ -277,7 +272,7 @@ public class YandexMapController implements
     return null;
   }
 
-  @SuppressWarnings({"unchecked"})
+  @SuppressWarnings({ "unchecked" })
   public Map<String, Double> getPoint(MethodCall call) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
 
@@ -290,27 +285,28 @@ public class YandexMapController implements
     return null;
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public void moveCamera(MethodCall call, MethodChannel.Result result) {
     Map<String, Object> params = ((Map<String, Object>) call.arguments);
 
     move(
-      cameraUpdateToPosition((Map<String, Object>) params.get("cameraUpdate")),
-      ((Map<String, Object>) params.get("animation")),
-      result
-    );
+        cameraUpdateToPosition((Map<String, Object>) params.get("cameraUpdate")),
+        ((Map<String, Object>) params.get("animation")),
+        result);
   }
 
   public Map<String, Object> getCameraPosition() {
     Map<String, Object> arguments = new HashMap<>();
 
-    arguments.put("cameraPosition", UtilsLite.cameraPositionToJson(mapView.getMapWindow().getMap().getCameraPosition()));
+    arguments.put("cameraPosition",
+        UtilsLite.cameraPositionToJson(mapView.getMapWindow().getMap().getCameraPosition()));
 
     return arguments;
   }
 
   public Map<String, Object> getUserCameraPosition() {
-    if (!hasLocationPermission()) return null;
+    if (!hasLocationPermission())
+      return null;
 
     if (userLocationLayer != null) {
       CameraPosition cameraPosition = userLocationLayer.cameraPosition();
@@ -329,9 +325,8 @@ public class YandexMapController implements
   public Map<String, Object> getVisibleRegion() {
     Map<String, Object> arguments = new HashMap<>();
     arguments.put(
-      "visibleRegion",
-      UtilsLite.visibleRegionToJson(mapView.getMapWindow().getMap().getVisibleRegion())
-    );
+        "visibleRegion",
+        UtilsLite.visibleRegionToJson(mapView.getMapWindow().getMap().getVisibleRegion()));
 
     return arguments;
   }
@@ -339,9 +334,8 @@ public class YandexMapController implements
   public Map<String, Object> getFocusRegion() {
     Map<String, Object> arguments = new HashMap<>();
     arguments.put(
-      "focusRegion",
-      UtilsLite.visibleRegionToJson(mapView.getMapWindow().getFocusRegion())
-    );
+        "focusRegion",
+        UtilsLite.visibleRegionToJson(mapView.getMapWindow().getFocusRegion()));
 
     return arguments;
   }
@@ -349,13 +343,12 @@ public class YandexMapController implements
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private boolean hasLocationPermission() {
     int permissionState = ActivityCompat.checkSelfPermission(
-      context,
-      Manifest.permission.ACCESS_FINE_LOCATION
-    );
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION);
     return permissionState == PackageManager.PERMISSION_GRANTED;
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   private CameraPosition cameraUpdateToPosition(Map<String, Object> cameraUpdate) {
     Map<String, Object> cameraUpdateParams = ((Map<String, Object>) cameraUpdate.get("params"));
 
@@ -385,62 +378,57 @@ public class YandexMapController implements
     }
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public CameraPosition newCameraPosition(Map<String, Object> params) {
     Map<String, Object> paramsCameraPosition = ((Map<String, Object>) params.get("cameraPosition"));
 
     return new CameraPosition(
-      UtilsLite.pointFromJson(((Map<String, Object>) paramsCameraPosition.get("target"))),
-      ((Double) paramsCameraPosition.get("zoom")).floatValue(),
-      ((Double) paramsCameraPosition.get("azimuth")).floatValue(),
-      ((Double) paramsCameraPosition.get("tilt")).floatValue()
-    );
+        UtilsLite.pointFromJson(((Map<String, Object>) paramsCameraPosition.get("target"))),
+        ((Double) paramsCameraPosition.get("zoom")).floatValue(),
+        ((Double) paramsCameraPosition.get("azimuth")).floatValue(),
+        ((Double) paramsCameraPosition.get("tilt")).floatValue());
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public CameraPosition newGeometry(Map<String, Object> params) {
-    ScreenRect focus = (Map<String, Object>) params.get("focusRect") != null ?
-      UtilsLite.screenRectFromJson((Map<String, Object>) params.get("focusRect")) :
-      null;
+    ScreenRect focus = (Map<String, Object>) params.get("focusRect") != null
+        ? UtilsLite.screenRectFromJson((Map<String, Object>) params.get("focusRect"))
+        : null;
 
     if (focus == null) {
       return mapView.getMapWindow().getMap().cameraPosition(
-        UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry"))
-      );
+          UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")));
     }
 
     if (validFocusRect(focus)) {
       return mapView.getMapWindow().getMap().cameraPosition(
-        UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")),
-        focus
-      );
+          UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")),
+          focus);
     }
 
     return null;
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public CameraPosition newTiltAzimuthGeometry(Map<String, Object> params) {
-    ScreenRect focus = (Map<String, Object>) params.get("focusRect") != null ?
-      UtilsLite.screenRectFromJson((Map<String, Object>) params.get("focusRect")) :
-      null;
+    ScreenRect focus = (Map<String, Object>) params.get("focusRect") != null
+        ? UtilsLite.screenRectFromJson((Map<String, Object>) params.get("focusRect"))
+        : null;
 
     if (focus == null) {
       return mapView.getMapWindow().getMap().cameraPosition(
-        UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")),
-        ((Double) params.get("azimuth")).floatValue(),
-        ((Double) params.get("tilt")).floatValue(),
-        null
-      );
+          UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")),
+          ((Double) params.get("azimuth")).floatValue(),
+          ((Double) params.get("tilt")).floatValue(),
+          null);
     }
 
     if (validFocusRect(focus)) {
       return mapView.getMapWindow().getMap().cameraPosition(
-        UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")),
-        ((Double) params.get("azimuth")).floatValue(),
-        ((Double) params.get("tilt")).floatValue(),
-        focus
-      );
+          UtilsLite.geometryFromJson((Map<String, Object>) params.get("geometry")),
+          ((Double) params.get("azimuth")).floatValue(),
+          ((Double) params.get("tilt")).floatValue(),
+          focus);
     }
 
     return null;
@@ -450,85 +438,79 @@ public class YandexMapController implements
     CameraPosition curPosition = mapView.getMapWindow().getMap().getCameraPosition();
 
     return new CameraPosition(
-      curPosition.getTarget(),
-      curPosition.getZoom() + 1,
-      curPosition.getAzimuth(),
-      curPosition.getTilt()
-    );
+        curPosition.getTarget(),
+        curPosition.getZoom() + 1,
+        curPosition.getAzimuth(),
+        curPosition.getTilt());
   }
 
   private CameraPosition zoomOut() {
     CameraPosition curPosition = mapView.getMapWindow().getMap().getCameraPosition();
 
     return new CameraPosition(
-      curPosition.getTarget(),
-      curPosition.getZoom() - 1,
-      curPosition.getAzimuth(),
-      curPosition.getTilt()
-    );
+        curPosition.getTarget(),
+        curPosition.getZoom() - 1,
+        curPosition.getAzimuth(),
+        curPosition.getTilt());
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   public CameraPosition zoomTo(Map<String, Object> params) {
     CameraPosition curPosition = mapView.getMapWindow().getMap().getCameraPosition();
 
     return new CameraPosition(
-      curPosition.getTarget(),
-      ((Double) params.get("zoom")).floatValue(),
-      curPosition.getAzimuth(),
-      curPosition.getTilt()
-    );
+        curPosition.getTarget(),
+        ((Double) params.get("zoom")).floatValue(),
+        curPosition.getAzimuth(),
+        curPosition.getTilt());
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   public CameraPosition azimuthTo(Map<String, Object> params) {
     CameraPosition curPosition = mapView.getMapWindow().getMap().getCameraPosition();
 
     return new CameraPosition(
-      curPosition.getTarget(),
-      curPosition.getZoom(),
-      ((Double) params.get("azimuth")).floatValue(),
-      curPosition.getTilt()
-    );
+        curPosition.getTarget(),
+        curPosition.getZoom(),
+        ((Double) params.get("azimuth")).floatValue(),
+        curPosition.getTilt());
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   public CameraPosition tiltTo(Map<String, Object> params) {
     CameraPosition curPosition = mapView.getMapWindow().getMap().getCameraPosition();
 
     return new CameraPosition(
-      curPosition.getTarget(),
-      curPosition.getZoom(),
-      curPosition.getAzimuth(),
-      ((Double) params.get("tilt")).floatValue()
-    );
+        curPosition.getTarget(),
+        curPosition.getZoom(),
+        curPosition.getAzimuth(),
+        ((Double) params.get("tilt")).floatValue());
   }
 
   private boolean validCameraPosition(CameraPosition cameraPosition) {
     return !((Float) cameraPosition.getZoom()).isNaN() &&
-      !((Float) cameraPosition.getZoom()).isNaN() &&
-      !((Float) cameraPosition.getAzimuth()).isNaN() &&
-      !((Double) cameraPosition.getTarget().getLatitude()).isNaN() &&
-      !((Double) cameraPosition.getTarget().getLongitude()).isNaN();
+        !((Float) cameraPosition.getZoom()).isNaN() &&
+        !((Float) cameraPosition.getAzimuth()).isNaN() &&
+        !((Double) cameraPosition.getTarget().getLatitude()).isNaN() &&
+        !((Double) cameraPosition.getTarget().getLongitude()).isNaN();
   }
 
   private boolean validFocusRect(ScreenRect focusRect) {
     return focusRect.getTopLeft().getY() >= 0 &&
-      focusRect.getTopLeft().getX() >= 0 &&
-      focusRect.getBottomRight().getY() <= mapView.getMapWindow().height() &&
-      focusRect.getBottomRight().getX() <= mapView.getMapWindow().width();
+        focusRect.getTopLeft().getX() >= 0 &&
+        focusRect.getBottomRight().getY() <= mapView.getMapWindow().height() &&
+        focusRect.getBottomRight().getX() <= mapView.getMapWindow().width();
   }
 
   private boolean validMapWindow() {
     return mapView.getMapWindow().width() > 0 && mapView.getMapWindow().height() > 0;
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   private void move(
-    CameraPosition cameraPosition,
-    Map<String, Object> paramsAnimation,
-    final MethodChannel.Result result
-  ) {
+      CameraPosition cameraPosition,
+      Map<String, Object> paramsAnimation,
+      final MethodChannel.Result result) {
     if (cameraPosition == null || !validCameraPosition(cameraPosition)) {
       result.success(false);
 
@@ -546,18 +528,17 @@ public class YandexMapController implements
     Animation animation = new Animation(type, ((Double) paramsAnimation.get("duration")).floatValue());
 
     mapView.getMapWindow().getMap().move(
-      cameraPosition,
-      animation,
-      new com.yandex.mapkit.map.Map.CameraCallback() {
-        @Override
-        public void onMoveFinished(boolean completed) {
-          result.success(completed);
-        }
-      }
-    );
+        cameraPosition,
+        animation,
+        new com.yandex.mapkit.map.Map.CameraCallback() {
+          @Override
+          public void onMoveFinished(boolean completed) {
+            result.success(completed);
+          }
+        });
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   private void applyMapOptions(Map<String, Object> params) {
     com.yandex.mapkit.map.Map map = mapView.getMapWindow().getMap();
 
@@ -610,7 +591,7 @@ public class YandexMapController implements
     }
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   private void applyMapObjects(Map<String, Object> params) {
     List<Map<String, Object>> toChangeParams = (List<Map<String, Object>>) params.get("toChange");
 
@@ -621,12 +602,11 @@ public class YandexMapController implements
     }
   }
 
-  @SuppressWarnings({"ConstantConditions"})
+  @SuppressWarnings({ "ConstantConditions" })
   private void applyAlignLogo(Map<String, Object> params) {
     Alignment logoPosition = new Alignment(
-      HorizontalAlignment.values()[(Integer) params.get("horizontal")],
-      VerticalAlignment.values()[(Integer) params.get("vertical")]
-    );
+        HorizontalAlignment.values()[(Integer) params.get("horizontal")],
+        VerticalAlignment.values()[(Integer) params.get("vertical")]);
     mapView.getMapWindow().getMap().getLogo().setAlignment(logoPosition);
   }
 
@@ -648,22 +628,20 @@ public class YandexMapController implements
     mapView.getMapWindow().setPointOfView(PointOfView.ADAPT_TO_FOCUS_POINT_HORIZONTALLY);
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   private void applyCameraBounds(Map<String, Object> params) {
-    BoundingBox latLngBounds = (Map<String, Object>) params.get("latLngBounds") != null ?
-      UtilsLite.boundingBoxFromJson((Map<String, Object>) params.get("latLngBounds")) :
-      null;
+    BoundingBox latLngBounds = (Map<String, Object>) params.get("latLngBounds") != null
+        ? UtilsLite.boundingBoxFromJson((Map<String, Object>) params.get("latLngBounds"))
+        : null;
 
     mapView.getMapWindow().getMap().getCameraBounds().setMinZoomPreference(
-      ((Double) params.get("minZoom")).floatValue()
-    );
+        ((Double) params.get("minZoom")).floatValue());
     mapView.getMapWindow().getMap().getCameraBounds().setMaxZoomPreference(
-      ((Double) params.get("maxZoom")).floatValue()
-    );
+        ((Double) params.get("maxZoom")).floatValue());
     mapView.getMapWindow().getMap().getCameraBounds().setLatLngBounds(latLngBounds);
   }
 
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
+  @SuppressWarnings({ "unchecked", "ConstantConditions" })
   public void onObjectAdded(final UserLocationView view) {
     final YandexMapController self = this;
     Map<String, Object> arguments = new HashMap<>();
@@ -681,34 +659,36 @@ public class YandexMapController implements
         Map<String, Object> params = ((Map<String, Object>) result);
 
         userPinController = new PlacemarkMapObjectController(
-          view.getPin(),
-          (Map<String, Object>) params.get("pin"),
-          new WeakReference<>(self)
-        );
+            view.getPin(),
+            (Map<String, Object>) params.get("pin"),
+            new WeakReference<>(self));
 
         userArrowController = new PlacemarkMapObjectController(
-          view.getArrow(),
-          (Map<String, Object>) params.get("arrow"),
-          new WeakReference<>(self)
-        );
+            view.getArrow(),
+            (Map<String, Object>) params.get("arrow"),
+            new WeakReference<>(self));
 
         userAccuracyCircleController = new CircleMapObjectController(
-          view.getAccuracyCircle(),
-          (Map<String, Object>) params.get("accuracyCircle"),
-          new WeakReference<>(self)
-        );
+            view.getAccuracyCircle(),
+            (Map<String, Object>) params.get("accuracyCircle"),
+            new WeakReference<>(self));
       }
 
       @Override
-      public void error(@NonNull String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {}
+      public void error(@NonNull String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
+      }
+
       @Override
-      public void notImplemented() {}
+      public void notImplemented() {
+      }
     });
   }
 
-  public void onObjectRemoved(@NonNull UserLocationView view) {}
+  public void onObjectRemoved(@NonNull UserLocationView view) {
+  }
 
-  public void onObjectUpdated(@NonNull UserLocationView view, @NonNull ObjectEvent event) {}
+  public void onObjectUpdated(@NonNull UserLocationView view, @NonNull ObjectEvent event) {
+  }
 
   public void onTrafficChanged(@Nullable TrafficLevel trafficLevel) {
     Map<String, Object> arguments = new HashMap<>();
@@ -724,16 +704,17 @@ public class YandexMapController implements
     methodChannel.invokeMethod("onTrafficChanged", arguments);
   }
 
-  public void onTrafficLoading() {}
+  public void onTrafficLoading() {
+  }
 
-  public void onTrafficExpired() {}
+  public void onTrafficExpired() {
+  }
 
   public void onCameraPositionChanged(
-    @NonNull com.yandex.mapkit.map.Map map,
-    @NonNull CameraPosition cameraPosition,
-    @NonNull CameraUpdateReason cameraUpdateReason,
-    boolean finished
-  ) {
+      @NonNull com.yandex.mapkit.map.Map map,
+      @NonNull CameraPosition cameraPosition,
+      @NonNull CameraUpdateReason cameraUpdateReason,
+      boolean finished) {
     Map<String, Object> arguments = new HashMap<>();
     arguments.put("cameraPosition", UtilsLite.cameraPositionToJson(cameraPosition));
     arguments.put("reason", cameraUpdateReason.ordinal());
@@ -764,7 +745,7 @@ public class YandexMapController implements
     Map<String, Object> metaMap = new HashMap<>();
     List<Map<String, Object>> geometryList = new ArrayList<>();
 
-    for (Geometry geometry: geoObj.getGeometry()) {
+    for (Geometry geometry : geoObj.getGeometry()) {
       geometryList.add(UtilsLite.geometryToJson(geometry));
     }
 
@@ -779,9 +760,8 @@ public class YandexMapController implements
     geoObjMap.put("descriptionText", geoObj.getDescriptionText());
     geoObjMap.put("geometry", geometryList);
     geoObjMap.put(
-      "boundingBox",
-      geoObj.getBoundingBox() == null ? null : UtilsLite.boundingBoxToJson(geoObj.getBoundingBox())
-    );
+        "boundingBox",
+        geoObj.getBoundingBox() == null ? null : UtilsLite.boundingBoxToJson(geoObj.getBoundingBox()));
     geoObjMap.put("selectionMetadata", metaMap);
     geoObjMap.put("aref", geoObj.getAref());
 
@@ -838,7 +818,8 @@ public class YandexMapController implements
   }
 
   @Override
-  public void onCreate(@NonNull LifecycleOwner owner) {}
+  public void onCreate(@NonNull LifecycleOwner owner) {
+  }
 
   @Override
   public void onStart(@NonNull LifecycleOwner owner) {
@@ -850,10 +831,12 @@ public class YandexMapController implements
   }
 
   @Override
-  public void onResume(@NonNull LifecycleOwner owner) {}
+  public void onResume(@NonNull LifecycleOwner owner) {
+  }
 
   @Override
-  public void onPause(@NonNull LifecycleOwner owner) {}
+  public void onPause(@NonNull LifecycleOwner owner) {
+  }
 
   @Override
   public void onStop(@NonNull LifecycleOwner owner) {
